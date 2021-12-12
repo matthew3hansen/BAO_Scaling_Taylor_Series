@@ -132,64 +132,45 @@ def marginal_linear_bias(alpha = 1.0):
     temp = 0.5 * np.multiply.outer(xi_IRrs, xi_IRrs_prime2)
     temp1 = temp.transpose()
     temp2 = np.multiply.outer(xi_IRrs_prime, xi_IRrs_prime)
-    a_a = (0.5 * np.multiply(precision, (temp + temp1 + temp2))).sum()
+    a_a = 0.5 * (np.multiply(precision, (temp + temp1 + temp2))).sum()
     
     temp = np.multiply.outer(xi_IRrs, xi_IRrs_prime)
     temp1 = temp.transpose()
-    b_a = (0.5 * np.multiply(precision, (temp + temp1))).sum()
+    b_a = 0.5 * (np.multiply(precision, (temp + temp1))).sum()
     
     temp = np.multiply.outer(xi_IRrs, xi_IRrs)
-    c_a = (0.5 * np.multiply(precision, temp)).sum()
+    c_a = 0.5 * (np.multiply(precision, temp)).sum()
     
     temp = 1.5 * np.multiply.outer(xi_IRrs_prime, xi_IRrs_prime2)
     temp1 = temp.transpose()
     temp2 = 0.5 * np.multiply.outer(xi_IRrs_prime3, xi_IRrs)
     temp3 = temp2.transpose()
-    a_da = (0.5 * np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
+    a_da = 0.5 * (np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
     
-    temp = np.multiply.outer(xi_IRrs, xi_IRrs_prime2)
-    temp1 = temp.transpose()
-    temp2 = 2 * np.multiply.outer(xi_IRrs_prime, xi_IRrs_prime)
-    b_da = (0.5 * np.multiply(precision, (temp + temp1 + temp2))).sum()
+    b_da = 2 * a_a
     
-    temp = np.multiply.outer(xi_IRrs, xi_IRrs_prime)
-    temp1 = temp.transpose()
-    c_da = (0.5 * np.multiply(precision, (temp + temp1))).sum()
+    c_da = b_a
     
     temp = -0.5 * np.multiply.outer(data_list, xi_IRrs_prime2)
     temp1 = temp.transpose()
-    temp2 = 0.0 #0.5 * np.multiply.outer(xi_IRrs_prime2, G)
-    temp3 = 0.0 #temp2.transpose()
-    a_b = (-0.5 * np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
+    a_b = -0.5 * (np.multiply(precision, (temp + temp1))).sum()
     
     temp = -1 * np.multiply.outer(data_list, xi_IRrs_prime)
     temp1 = temp.transpose()
-    temp2 = 0.0 #np.multiply.outer(xi_IRrs_prime, G)
-    temp3 = 0.0 #temp2.transpose()
-    b_b = (-0.5 * np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
+    b_b = -0.5 * (np.multiply(precision, (temp + temp1))).sum()
     
     temp = -1 * np.multiply.outer(data_list, xi_IRrs)
     temp1 = temp.transpose()
-    temp2 = 0.0 #np.multiply.outer(G, xi_IRrs)
-    temp3 = 0.0 #temp2.transpose()
-    c_b = (-0.5 * np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
+    c_b = -0.5 * (np.multiply(precision, (temp + temp1))).sum()
     
     temp = - 0.5 * np.multiply.outer(data_list, xi_IRrs_prime3)
     temp1 = temp.transpose()
-    temp2 = 0.0 #0.5 * (np.multiply.outer(xi_IRrs_prime3 , G))
-    temp3 = 0.0 #temp1.transpose()
-    a_db = (-0.5 * np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
+    a_db = -0.5 * (np.multiply(precision, (temp + temp1))).sum()
     
-    temp = np.multiply.outer(data_list, xi_IRrs_prime2)
-    temp1 = temp.transpose()
-    b_db = (0.5 * np.multiply(precision, (temp + temp1))).sum()
+    b_db = 2 * a_b
     
-    temp = np.multiply.outer(data_list, xi_IRrs_prime)
-    temp1 = temp.transpose()
-    c_db = (0.5 * np.multiply(precision, (temp + temp1))).sum()
+    c_db = b_b
 
-    #print('Vectorize: ', time.time() - start)
-    #The vectorizable equations are 75 times faster than the for-loop equations
     A = - 0.5 * a_da / c_a + 0.5 * b_a * b_da / c_a**2 - 0.25 * c_da * (2 * b_a**2 / c_a**3 - 2 * a_a / c_a**2) \
            + 0.5 * a_b * c_db / c_a + 0.5 * b_b * b_db / c_a - 0.5 * c_b * b_a * b_db / c_a**2 + 0.25 * c_b * c_db\
            * (2 * b_a**2 / c_a**3 - 2 * a_a / c_a**2) - 0.25 * c_da * (2 * a_b * c_b + b_b**2) / c_a**2 \
@@ -255,27 +236,19 @@ def marginal_linear_bias_second_order(alpha = 1.0):
     
     temp = -0.5 * np.multiply.outer(data_list, xi_IRrs_prime2)
     temp1 = temp.transpose()
-    temp2 = 0.0 #0.5 * np.multiply.outer(xi_IRrs_prime2, G)
-    temp3 = 0.0 #temp2.transpose()
-    a_b = (-0.5 * np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
+    a_b = (-0.5 * np.multiply(precision, (temp + temp1))).sum()
     
     temp = -1 * np.multiply.outer(data_list, xi_IRrs_prime)
     temp1 = temp.transpose()
-    temp2 = 0.0 #np.multiply.outer(xi_IRrs_prime, G)
-    temp3 = 0.0 #temp2.transpose()
-    b_b = (-0.5 * np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
+    b_b = (-0.5 * np.multiply(precision, (temp + temp1))).sum()
     
     temp = -1 * np.multiply.outer(data_list, xi_IRrs)
     temp1 = temp.transpose()
-    temp2 = 0.0 #np.multiply.outer(G, xi_IRrs)
-    temp3 = 0.0 #temp2.transpose()
-    c_b = (-0.5 * np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
+    c_b = (-0.5 * np.multiply(precision, (temp + temp1))).sum()
     
     temp = 0#- 0.5 * np.multiply.outer(data_list, xi_IRrs_prime3)
     temp1 = 0#temp.transpose()
-    temp2 = 0.0 #0.5 * (np.multiply.outer(xi_IRrs_prime3 , G))
-    temp3 = 0.0 #temp1.transpose()
-    a_db = (-0.5 * np.multiply(precision, (temp + temp1 + temp2 + temp3))).sum()
+    a_db = 0#(-0.5 * np.multiply(precision, (temp + temp1))).sum()
     
     temp = np.multiply.outer(data_list, xi_IRrs_prime2)
     temp1 = temp.transpose()
